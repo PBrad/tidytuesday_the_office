@@ -1,0 +1,30 @@
+TidyTuesday - The Office
+================
+
+## Overview
+
+Working through an old (2020-03-17) [TidyTuesday posting on The
+Office](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-03-17/readme.md).
+
+The posted TidyTuesday data are included in a single csv, available via
+*tidytuesdayR::tt\_load().* The post also directs users to the
+[schrute](https://bradlindblad.github.io/schrute/index.html) package,
+available on CRAN. The package is simply a means for accessing the
+complete transcripts, along with the rating information (there’s
+literally a single function in the package - *schrute::theoffice*). For
+this project, I’m going to use the full transcripts + ratings.
+
+``` r
+# Ratings / basic episode info only
+# library(tidytuesdayR)
+# tt <- tt_load('2020-03-17')
+
+# Ratings / episode info / full transcripts
+library(schrute)
+df_transcripts <- theoffice
+```
+
+## Note
+
+This is my take on the data before checking out Julia Silge’s or David
+Robinson’s TidyTuesday entries.
