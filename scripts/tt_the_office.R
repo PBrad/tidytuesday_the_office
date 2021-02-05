@@ -101,3 +101,19 @@ df_ratings %>%
   labs(x = "Air Date",
        y = "IMDB Rating", 
        title = "The Office - Ratings by Episode") 
+
+ggsave('res/ratings_by_epsiode_point.png')
+
+df_ratings %>% 
+  group_by(season) %>% 
+  mutate(season_start = min(air_date)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = air_date, y = imdb_rating, color = as.character(season))) +
+  geom_point() +
+  guides(color = FALSE) +
+  geom_line() +
+  labs(x = "Air Date",
+       y = "IMDB Rating", 
+       title = "The Office - Ratings by Episode") 
+
+ggsave('res/ratings_by_epsiode_line.png')
