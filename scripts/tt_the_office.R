@@ -170,7 +170,7 @@ character_lines_pct %>%
 
 character_lines_pct %>% 
   mutate(char_id = tolower(character)) %>% 
-  group_by(character) %>% 
+  group_by(char_id) %>% 
   mutate(max_pct = max(pct)) %>% 
   ungroup() %>% 
   filter(pct == max_pct) %>% 
@@ -183,3 +183,5 @@ character_lines_pct %>%
   labs(x = "",
        y = "",
        title = "'The Office' Character's % of Lines in Most Prominent Episode")
+
+ggsave('res/pct_of_lines.png')
