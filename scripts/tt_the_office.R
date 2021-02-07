@@ -117,3 +117,69 @@ df_ratings %>%
        title = "The Office - Ratings by Episode") 
 
 ggsave('res/ratings_by_epsiode_line.png')
+
+# Explore Characters - Who has the most lines? ----------------------------
+
+# Count of lines per episode
+df_transcripts %>% 
+  group_by(season, episode) %>% 
+  count(character, sort = TRUE) %>% 
+  print(n = 50) 
+
+# Pct of lines per episode
+df_transcripts %>% 
+  group_by(season, episode, character) %>% 
+  summarize(n = n()) %>% 
+  ungroup() %>%
+  group_by(season, episode) %>% 
+  mutate(total = sum(n)) %>% 
+  mutate(pct = n / total) %>% 
+  select(everything(), total) %>% 
+  arrange(desc(pct)) %>% 
+  print(n = 100)
+
+character_lines_pct <- df_transcripts %>% 
+  group_by(season, episode, character) %>% 
+  summarize(n = n()) %>% 
+  ungroup() %>%
+  group_by(season, episode) %>% 
+  mutate(total = sum(n)) %>% 
+  mutate(pct = n / total) 
+
+# Can we identify the core cast based on pct of lines per episode?
+# Or at least identify episodes in which each character was
+# most prominently featured?
+character_lines_pct %>% 
+  group_by(character) %>% 
+  mutate(max_pct = max(pct)) %>% 
+  ungroup() %>% 
+  filter(pct == max_pct) %>% 
+  arrange(desc(pct)) %>% 
+  select(-c(n, total, max_pct)) %>% 
+  print(n = 50) # Some variation in character name spelling - may need to normalize
+
+character_lines_pct %>% 
+  mutate(char_id = tolower(character)) %>% 
+  group_by(character) %>% 
+  mutate(max_pct = max(pct)) %>% 
+  ungroup() %>% 
+  filter(pct == max_pct) %>% 
+  arrange(desc(pct)) %>% 
+  select(-c(n, total, max_pct, char_id)) %>% 
+  print(n = 50) 
+
+character_lines_pct %>% 
+  mutate(char_id = tolower(character)) %>% 
+  group_by(character) %>% 
+  mutate(max_pct = max(pct)) %>% 
+  ungroup() %>% 
+  filter(pct == max_pct) %>% 
+  arrange(desc(pct)) %>% 
+  slice_head(n = 15) %>% 
+  ggplot(aes(x = reorder(character, pct), y = pct)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "",
+       y = "",
+       title = "'The Office' Character's % of Lines in Most Prominent Episode")
